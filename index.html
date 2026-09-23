@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Message From My Heart ??</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&family=Sacramento&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 20%, #2b1022 0%, #120815 100%);
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Particle Canvas */
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Card Container */
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 480px;
+      min-height: 520px;
+      padding: 35px 28px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 28px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.4s ease;
+    }
+
+    /* Steps visibility */
+    .step {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px) scale(0.96);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+    }
+
+    .step.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Envelope animation */
+    .envelope-wrapper {
+      cursor: pointer;
+      position: relative;
+      margin-bottom: 25px;
+      transition: transform 0.3s ease;
+    }
+
+    .envelope-wrapper:hover {
+      transform: scale(1.08);
+    }
+
+    .heart-icon {
+      font-size: 75px;
+      display: inline-block;
+      filter: drop-shadow(0 0 20px #ff4b72);
+      animation: pulse 1.6s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.18); }
+    }
+
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.5rem;
+      color: #ff85a1;
+      margin-bottom: 12px;
+      text-shadow: 0 0 16px rgba(255, 133, 161, 0.4);
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: #fce4ec;
+      font-weight: 300;
+      margin-bottom: 20px;
+    }
+
+    .quote-box {
+      background: rgba(255, 105, 135, 0.1);
+      border-left: 3px solid #ff6b8b;
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin: 15px 0 22px;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: #ffebee;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+      width: 100%;
+      justify-content: center;
+      position: relative;
+    }
+
+    button {
+      padding: 14px 28px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ff4b72, #ff758c);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(255, 75, 114, 0.45);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffd1dc;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Big Apology & Love Heading */
+    .highlight-text {
+      font-family: 'Sacramento', cursive;
+      font-size: 3.4rem;
+      color: #ff4071;
+      text-shadow: 0 0 25px rgba(255, 64, 113, 0.7);
+      line-height: 1.1;
+      margin-top: 10px;
+    }
+
+    .tagline {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ff9ebb;
+      margin-bottom: 8px;
+    }
+
+    /* Floating glowing orbs in background */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.45;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb-1 { width: 320px; height: 320px; background: #ff2d55; top: -50px; left: -80px; }
+    .orb-2 { width: 260px; height: 260px; background: #9c27b0; bottom: -50px; right: -60px; }
+  </style>
+</head>
+<body>
+
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <canvas id="canvas"></canvas>
+
+  <div class="container">
+    
+    <!-- STEP 1: Envelope -->
+    <div class="step active" id="step1">
+      <div class="envelope-wrapper" onclick="goToStep(2)">
+        <span class="heart-icon">??</span>
+      </div>
+      <p class="tagline">From Someone Who Cares</p>
+      <h1>A Special Note For You</h1>
+      <p>I wrote this straight from my heart because there is something important I need to tell you...</p>
+      <button class="btn-primary" onclick="goToStep(2)">Tap to Open ?</button>
+    </div>
+
+    <!-- STEP 2: The Apology -->
+    <div class="step" id="step2">
+      <span style="font-size: 50px; margin-bottom: 8px;">??</span>
+      <p class="tagline">I am really sorry</p>
+      <h1>I Made a Mistake</h1>
+      <p>
+        I know my words or actions hurt you, and knowing that tears me apart inside. 
+        You mean the world to me, and hurting you is the absolute last thing I ever wanted to do.
+      </p>
+      <div class="quote-box">
+        "Your smile is my favorite thing in the universe, and it breaks my heart that I caused you pain."
+      </div>
+      <button class="btn-primary" onclick="goToStep(3)">There's More ??</button>
+    </div>
+
+    <!-- STEP 3: The Question -->
+    <div class="step" id="step3">
+      <span style="font-size: 50px; margin-bottom: 8px;">??</span>
+      <p class="tagline">From the depths of my heart</p>
+      <h1>Can You Forgive Me?</h1>
+      <p>
+        I promise to listen more, understand better, and cherish you every single day. 
+        Will you please give me a chance to make it right?
+      </p>
+      <div class="btn-group">
+        <button class="btn-primary" onclick="goToStep(4)">Yes, I forgive you ??</button>
+        <button class="btn-secondary" id="runawayBtn" onmouseover="dodgeButton()" onclick="dodgeButton()">No</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Finale & Love Statement -->
+    <div class="step" id="step4">
+      <span class="heart-icon" style="font-size: 65px; margin-bottom: 5px;">??</span>
+      <p class="tagline">Forever & Always</p>
+      <div class="highlight-text">I Love You</div>
+      <h1 style="font-size: 2.1rem; color: #fff; margin-top: 10px;">Please forgive me.</h1>
+      <p style="margin-top: 15px;">
+        Thank you for being in my life. You are irreplaceable to me, today, tomorrow, and always. ???
+      </p>
+      <button class="btn-primary" onclick="celebrateBurst()">Send Love Back ??</button>
+    </div>
+
+  </div>
+
+  <script>
+    // --- Gentle Audio Chimes (Web Audio API) ---
+    let audioCtx = null;
+    function playChime(freq = 520, type = 'sine') {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+      } catch (e) {
+        // Audio optional fallback
+      }
+    }
+
+    // --- Step Switcher ---
+    let currentStep = 1;
+    function goToStep(stepNumber) {
+      const current = document.getElementById(`step${currentStep}`);
+      const next = document.getElementById(`step${stepNumber}`);
+      
+      playChime(440 + stepNumber * 90);
+
+      current.classList.remove('active');
+      setTimeout(() => {
+        currentStep = stepNumber;
+        next.classList.add('active');
+        if (stepNumber === 4) {
+          celebrateBurst();
+        }
+      }, 300);
+    }
+
+    // --- Playful Runaway "No" Button ---
+    const runawayBtn = document.getElementById('runawayBtn');
+    let attempts = 0;
+    const quirkyTexts = ["Are you sure? ??", "Please? ??", "Give me a chance!", "Don't click me! ??", "No way! ?? Yes"];
+    
+    function dodgeButton() {
+      attempts++;
+      const randomX = (Math.random() - 0.5) * 180;
+      const randomY = (Math.random() - 0.5) * 120;
+      runawayBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+      runawayBtn.innerText = quirkyTexts[attempts % quirkyTexts.length];
+      playChime(320 + attempts * 40);
+    }
+
+    // --- Canvas Heart & Petal Particles ---
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    const particles = [];
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(burst = false) {
+        this.reset(burst);
+      }
+      reset(burst = false) {
+        this.x = burst ? width / 2 : Math.random() * width;
+        this.y = burst ? height / 2 : height + Math.random() * 50;
+        this.size = Math.random() * 14 + 10;
+        this.speedY = burst ? (Math.random() - 0.5) * 12 : -(Math.random() * 1.5 + 0.8);
+        this.speedX = burst ? (Math.random() - 0.5) * 12 : (Math.random() - 0.5) * 1.2;
+        this.opacity = burst ? 1 : Math.random() * 0.7 + 0.3;
+        this.rot = Math.random() * Math.PI * 2;
+        this.rotSpeed = (Math.random() - 0.5) * 0.05;
+        this.type = Math.random() > 0.4 ? 'heart' : 'circle';
+        this.color = ['#ff4b72', '#ff85a1', '#ffc2d1', '#ffd166'][Math.floor(Math.random() * 4)];
+        this.life = burst ? 80 : 9999;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.rot += this.rotSpeed;
+        if (this.life < 9999) {
+          this.life--;
+          this.opacity = this.life / 80;
+        }
+        if (this.y < -30 || this.x < -30 || this.x > width + 30 || this.life <= 0) {
+          this.reset(false);
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rot);
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+
+        if (this.type === 'heart') {
+          // Draw a small heart
+          const s = this.size / 20;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(-10 * s, -12 * s, -20 * s, 6 * s, 0, 18 * s);
+          ctx.bezierCurveTo(20 * s, 6 * s, 10 * s, -12 * s, 0, 0);
+          ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.arc(0, 0, this.size / 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
+    // Populate initial gentle floating background
+    for (let i = 0; i < 40; i++) {
+      particles.push(new Particle());
+    }
+
+    function celebrateBurst() {
+      playChime(660);
+      setTimeout(() => playChime(880), 180);
+      for (let i = 0; i < 60; i++) {
+        particles.push(new Particle(true));
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach((p, index) => {
+        p.update();
+        p.draw();
+        if (p.life <= 0 && particles.length > 40) {
+          particles.splice(index, 1);
+        }
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
